@@ -95,8 +95,7 @@ document.addEventListener('DOMContentLoaded', () => {
     async function fetchTasksFromSupabase() {
         const { data, error } = await supabaseClient
             .from('todos')
-            .select('*')
-            .order('id', { ascending: false });
+            .select('*');
 
         if (error) {
             console.error('Gagal mengambil data dari Supabase:', error.message);
