@@ -1,7 +1,7 @@
 // ==========================================
 // 1. INISIALISASI SUPABASE
 // ==========================================
-const SUPABASE_URL = 'https://tppjfbdyazitrbwmvyxm.supabase.co';[cite: 1]
+const SUPABASE_URL = 'https://tppjfbdyazitrbwmvyxm.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRwcGpmYmR5YXppdHJid212eXhtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTEwMjY3NTgsImV4cCI6MjEwNjYwMjc1OH0.gi8yOyHhGk7nhu7rTd1Z1poo0cGInfLa-lAPwFqP5Io';
 
 const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
@@ -41,45 +41,55 @@ document.addEventListener('DOMContentLoaded', () => {
     fetchTasksFromSupabase();
 
     // Set tampilan awal: Masukkan Tugas aktif
-    pageInput.classList.remove('hidden');
-    pageList.classList.add('hidden');
-
-    // Tab Navigasi Masukkan Tugas
-    navInput.addEventListener('click', () => {
-        navInput.classList.add('active');
-        navList.classList.remove('active');
+    if (pageInput && pageList) {
         pageInput.classList.remove('hidden');
         pageList.classList.add('hidden');
-    });
+    }
+
+    // Tab Navigasi Masukkan Tugas
+    if (navInput) {
+        navInput.addEventListener('click', () => {
+            navInput.classList.add('active');
+            if (navList) navList.classList.remove('active');
+            if (pageInput) pageInput.classList.remove('hidden');
+            if (pageList) pageList.classList.add('hidden');
+        });
+    }
 
     // Tab Navigasi List Tugas
-    navList.addEventListener('click', () => {
-        navList.classList.add('active');
-        navInput.classList.remove('active');
-        pageList.classList.remove('hidden');
-        pageInput.classList.add('hidden');
-        fetchTasksFromSupabase(); // Ambil data terbaru dari server
-    });
+    if (navList) {
+        navList.addEventListener('click', () => {
+            navList.classList.add('active');
+            if (navInput) navInput.classList.remove('active');
+            if (pageList) pageList.classList.remove('hidden');
+            if (pageInput) pageInput.classList.add('hidden');
+            fetchTasksFromSupabase(); // Ambil data terbaru dari server
+        });
+    }
 
     // Tombol silang untuk menutup notifikasi manual
-    closeToastBtn.addEventListener('click', () => {
-        toastNotification.classList.remove('show');
-        if (toastTimeout) clearTimeout(toastTimeout);
-    });
+    if (closeToastBtn) {
+        closeToastBtn.addEventListener('click', () => {
+            if (toastNotification) toastNotification.classList.remove('show');
+            if (toastTimeout) clearTimeout(toastTimeout);
+        });
+    }
 
     // --- MENDENGARKAN TOMBOL ENTER DI APAPUN KOLOM INPUT ---
-    taskForm.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter') {
+    if (taskForm) {
+        taskForm.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                simpanTugas();
+            }
+        });
+
+        // Submit saat Klik Tombol "Simpan Tugas"
+        taskForm.addEventListener('submit', (e) => {
             e.preventDefault();
             simpanTugas();
-        }
-    });
-
-    // Submit saat Klik Tombol "Simpan Tugas"
-    taskForm.addEventListener('submit', (e) => {
-        e.preventDefault();
-        simpanTugas();
-    });
+        });
+    }
 
     // --- FUNGSI UTAMA AMBIL DATA DARI SUPABASE (READ) ---
     async function fetchTasksFromSupabase() {
@@ -93,40 +103,39 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        taskListArray = data;
+        taskListArray = data || [];
         renderTasks();
     }
 
     // --- FUNGSI UTAMA SIMPAN TUGAS (CREATE) ---
     async function simpanTugas() {
         // Reset Error
-        titleError.style.display = 'none';
-        categoryError.style.display = 'none';
-        deadlineError.style.display = 'none';
+        if (titleError) titleError.style.display = 'none';
+        if (categoryError) categoryError.style.display = 'none';
+        if (deadlineError) deadlineError.style.display = 'none';
 
         let isValid = true;
 
-        if (!taskTitle.value.trim()) {
-            titleError.style.display = 'block';
+        if (!taskTitle || !taskTitle.value.trim()) {
+            if (titleError) titleError.style.display = 'block';
             isValid = false;
         }
-        if (!taskCategory.value) {
-            categoryError.style.display = 'block';
+        if (taskCategory && !taskCategory.value) {
+            if (categoryError) categoryError.style.display = 'block';
             isValid = false;
         }
-        if (!taskDeadline.value) {
-            deadlineError.style.display = 'block';
+        if (taskDeadline && !taskDeadline.value) {
+            if (deadlineError) deadlineError.style.display = 'block';
             isValid = false;
         }
 
         if (!isValid) return;
 
+        // Hanya mengirim kolom yang ada di tabel 'todos' (title, deadline, status)
         const newTask = {
             title: taskTitle.value.trim(),
-            category: taskCategory.value,
-            deadline: taskDeadline.value,
-            priority: taskPriority.value,
-            status: taskStatus.value
+            deadline: taskDeadline ? taskDeadline.value : null,
+            status: taskStatus ? taskStatus.value : 'Belum Selesai'
         };
 
         // Simpan Data ke Supabase
@@ -140,33 +149,37 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         // Reset Isian Form Input
-        taskTitle.value = '';
-        taskCategory.value = '';
-        taskDeadline.value = '';
-        taskPriority.value = 'Sedang';
-        taskStatus.value = 'Belum Selesai';
+        if (taskTitle) taskTitle.value = '';
+        if (taskCategory) taskCategory.value = '';
+        if (taskDeadline) taskDeadline.value = '';
+        if (taskPriority) taskPriority.value = 'Sedang';
+        if (taskStatus) taskStatus.value = 'Belum Selesai';
 
         // Refresh Data dan Otomatis Pindah ke Tab List Tugas
         await fetchTasksFromSupabase();
-        navList.click();
+        if (navList) navList.click();
 
         // Tampilkan Notifikasi Pop-up di Atas
-        if (toastTimeout) clearTimeout(toastTimeout);
-        toastNotification.classList.add('show');
+        if (toastNotification) {
+            if (toastTimeout) clearTimeout(toastTimeout);
+            toastNotification.classList.add('show');
 
-        // Otomatis Sembunyi setelah 3.5 detik
-        toastTimeout = setTimeout(() => {
-            toastNotification.classList.remove('show');
-        }, 3500);
+            // Otomatis Sembunyi setelah 3.5 detik
+            toastTimeout = setTimeout(() => {
+                toastNotification.classList.remove('show');
+            }, 3500);
+        }
     }
 
     // --- FILTER & RENDER TAMPILAN ---
-    filterCategory.addEventListener('change', renderTasks);
-    filterStatus.addEventListener('change', renderTasks);
+    if (filterCategory) filterCategory.addEventListener('change', renderTasks);
+    if (filterStatus) filterStatus.addEventListener('change', renderTasks);
 
     function renderTasks() {
-        const catVal = filterCategory.value;
-        const statVal = filterStatus.value;
+        if (!taskListContainer) return;
+
+        const catVal = filterCategory ? filterCategory.value : 'Semua';
+        const statVal = filterStatus ? filterStatus.value : 'Semua';
 
         const filtered = taskListArray.filter(t => {
             const matchCat = (catVal === 'Semua' || t.category === catVal);
@@ -174,16 +187,18 @@ document.addEventListener('DOMContentLoaded', () => {
             return matchCat && matchStat;
         });
 
-        taskCountBadge.textContent = taskListArray.length;
+        if (taskCountBadge) taskCountBadge.textContent = taskListArray.length;
         taskListContainer.innerHTML = '';
 
         if (filtered.length === 0) {
-            taskListContainer.appendChild(emptyState);
-            emptyState.style.display = 'block';
+            if (emptyState) {
+                taskListContainer.appendChild(emptyState);
+                emptyState.style.display = 'block';
+            }
             return;
         }
 
-        emptyState.style.display = 'none';
+        if (emptyState) emptyState.style.display = 'none';
 
         filtered.forEach(task => {
             const card = document.createElement('div');
@@ -198,11 +213,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 <div class="task-meta-tags">
                     <span class="tag-badge tag-mk"><i class="fa-solid fa-book"></i> ${task.category || '-'}</span>
                     <span class="tag-badge tag-date"><i class="fa-solid fa-calendar"></i> ${task.deadline || '-'}</span>
-                    <span class="tag-badge tag-prio-${task.priority}">Prioritas: ${task.priority || 'Sedang'}</span>
+                    <span class="tag-badge tag-prio-${task.priority || 'Sedang'}">Prioritas: ${task.priority || 'Sedang'}</span>
                 </div>
                 <div class="task-footer-row">
-                    <span class="status-badge status-${task.status ? task.status.split(' ')[0] : 'Belum'}">${task.status}</span>
-                    <button class="btn-act" onclick="toggleStatus(${task.id}, '${task.status}')">
+                    <span class="status-badge status-${task.status ? task.status.split(' ')[0] : 'Belum'}">${task.status || 'Belum Selesai'}</span>
+                    <button class="btn-act" onclick="toggleStatus(${task.id}, '${task.status || 'Belum Selesai'}')">
                         Ubah Status <i class="fa-solid fa-rotate"></i>
                     </button>
                 </div>
@@ -253,15 +268,21 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Sembunyikan pesan error saat pengguna mulai mengetik/memilih kembali
-    taskTitle.addEventListener('input', () => {
-        titleError.style.display = 'none';
-    });
+    if (taskTitle && titleError) {
+        taskTitle.addEventListener('input', () => {
+            titleError.style.display = 'none';
+        });
+    }
 
-    taskCategory.addEventListener('change', () => {
-        categoryError.style.display = 'none';
-    });
+    if (taskCategory && categoryError) {
+        taskCategory.addEventListener('change', () => {
+            categoryError.style.display = 'none';
+        });
+    }
 
-    taskDeadline.addEventListener('change', () => {
-        deadlineError.style.display = 'none';
-    });
+    if (taskDeadline && deadlineError) {
+        taskDeadline.addEventListener('change', () => {
+            deadlineError.style.display = 'none';
+        });
+    }
 });
