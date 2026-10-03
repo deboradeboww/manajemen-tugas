@@ -130,10 +130,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (!isValid) return;
 
-        // Hanya mengirim kolom yang ada di tabel 'todos' (title, deadline, status)
+        // Mengirimkan seluruh kolom (title, category, deadline, priority, status)
         const newTask = {
             title: taskTitle.value.trim(),
+            category: taskCategory ? taskCategory.value : null,
             deadline: taskDeadline ? taskDeadline.value : null,
+            priority: taskPriority ? taskPriority.value : 'Sedang',
             status: taskStatus ? taskStatus.value : 'Belum Selesai'
         };
 
@@ -210,7 +212,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     </button>
                 </div>
                 <div class="task-meta-tags">
-                    <span class="tag-badge tag-mk"><i class="fa-solid fa-book"></i> ${task.category || '-'}</span>
+                    <span class="tag-badge tag-mk"><i class="fa-solid fa-book"></i> ${escapeHTML(task.category) || '-'}</span>
                     <span class="tag-badge tag-date"><i class="fa-solid fa-calendar"></i> ${task.deadline || '-'}</span>
                     <span class="tag-badge tag-prio-${task.priority || 'Sedang'}">Prioritas: ${task.priority || 'Sedang'}</span>
                 </div>
