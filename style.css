@@ -1,0 +1,427 @@
+:root {
+    --bg-pink: #ffeef2;
+    --card-bg: #ffffff;
+    --text-dark: #4a3e4d;
+    --text-muted: #8c7b8e;
+    --gradient-header: linear-gradient(135deg, #f06292 0%, #ec407a 50%, #ff8a65 100%);
+    --gradient-btn: linear-gradient(90deg, #ec407a, #ff8a65);
+    --input-border: #f8bbd0;
+    --shadow: 0 8px 24px rgba(236, 64, 122, 0.12);
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    background-color: var(--bg-pink);
+    color: var(--text-dark);
+    display: flex;
+    justify-content: center;
+    padding: 20px 12px 40px;
+    min-height: 100vh;
+}
+
+.main-wrapper {
+    width: 100%;
+    max-width: 540px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.app-header {
+    background: var(--gradient-header);
+    border-radius: 24px;
+    padding: 20px;
+    color: white;
+    box-shadow: var(--shadow);
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    position: sticky;
+    top: 10px;
+    z-index: 100;
+}
+
+/* === PROFILE HEADER DI TENGAH === */
+.user-profile {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    gap: 10px;
+}
+
+.avatar {
+    width: 48px;
+    height: 48px;
+    background: rgba(255, 255, 255, 0.25);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.3rem;
+}
+
+.user-info {
+    text-align: center;
+}
+
+.user-info h2 {
+    font-size: 1.15rem;
+    font-weight: 700;
+}
+
+.user-info p {
+    font-size: 0.8rem;
+    opacity: 0.9;
+}
+
+.sidebar {
+    width: 100%;
+}
+
+.nav-menu {
+    list-style: none;
+    display: flex;
+    gap: 10px;
+}
+
+.nav-item {
+    flex: 1;
+    background: rgba(255, 255, 255, 0.2);
+    padding: 10px 12px;
+    border-radius: 16px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 0.85rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: all 0.2s ease;
+    user-select: none;
+}
+
+.nav-item:hover, .nav-item.active {
+    background: #ffffff;
+    color: #ec407a;
+}
+
+.nav-badge {
+    background: #ec407a;
+    color: white;
+    font-size: 0.75rem;
+    padding: 2px 8px;
+    border-radius: 12px;
+}
+
+.nav-item.active .nav-badge {
+    background: #f8bbd0;
+    color: #c2185b;
+}
+
+.main-content {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.page-card {
+    background: var(--card-bg);
+    padding: 24px;
+    border-radius: 24px;
+    box-shadow: var(--shadow);
+    scroll-margin-top: 170px;
+}
+
+/* === JUDUL UTAMA DI TENGAH === */
+h1 {
+    font-size: 1.15rem;
+    color: #d81b60;
+    margin-bottom: 18px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid var(--bg-pink);
+    text-align: center;
+}
+
+.form-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    text-align: center;
+}
+
+label {
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: var(--text-muted);
+    text-align: center;
+    display: block;
+}
+
+input[type="text"], input[type="date"], select {
+    width: 100%;
+    padding: 12px 16px;
+    border: 1.5px solid var(--input-border);
+    border-radius: 18px;
+    font-size: 0.9rem;
+    background: #fff5f7;
+    color: var(--text-dark);
+    outline: none;
+    transition: all 0.2s ease;
+    text-align: center;
+    text-align-last: center;
+}
+
+input:focus, select:focus {
+    border-color: #ec407a;
+    background: #ffffff;
+    box-shadow: 0 0 0 3px rgba(236, 64, 122, 0.15);
+}
+
+.error-message {
+    color: #e53935;
+    font-size: 0.75rem;
+    display: none;
+    margin-top: 2px;
+    text-align: center;
+}
+
+.btn-submit {
+    width: 100%;
+    padding: 14px;
+    background: var(--gradient-btn);
+    color: white;
+    border: none;
+    border-radius: 22px;
+    font-size: 0.95rem;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(236, 64, 122, 0.3);
+    margin-top: 8px;
+}
+
+.btn-submit:active {
+    transform: scale(0.98);
+}
+
+.filter-section {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 16px;
+}
+
+.filter-section select {
+    font-size: 0.8rem;
+    padding: 8px 12px;
+    border-radius: 14px;
+}
+
+.task-container {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+/* Card Item Tugas */
+.task-card-item {
+    background: #ffffff;
+    border: 1px solid var(--input-border);
+    border-radius: 18px;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+}
+
+.task-header-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 12px;
+}
+
+/* MENANGANI TEKS PANJANG SUPAYA WRAP KE BAWAH */
+.task-title-text {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--text-dark);
+    flex: 1;
+    white-space: normal;
+    word-break: break-word;
+    overflow-wrap: anywhere;
+    line-height: 1.4;
+    text-align: left;
+    margin: 0;
+}
+
+.task-meta-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.tag-badge {
+    font-size: 0.72rem;
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-weight: 600;
+}
+
+.tag-mk { background: #f3e5f5; color: #ab47bc; }
+.tag-date { background: #fff3e0; color: #ef6c00; }
+.tag-prio-Tinggi { background: #ffebee; color: #c62828; }
+.tag-prio-Sedang { background: #e8eaf6; color: #283593; }
+.tag-prio-Rendah { background: #f1f8e9; color: #33691e; }
+
+.task-footer-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px dashed var(--input-border);
+    padding-top: 10px;
+    margin-top: 4px;
+}
+
+.status-badge {
+    font-size: 0.75rem;
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-weight: 700;
+}
+
+.status-Belum { background: #ffebee; color: #c62828; }
+.status-Sedang { background: #fff8e1; color: #f57f17; }
+.status-Selesai { background: #e8f5e9; color: #2e7d32; }
+
+.action-btns {
+    display: flex;
+    gap: 8px;
+}
+
+.btn-act {
+    border: none;
+    background: #f5f5f5;
+    padding: 6px 10px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 0.8rem;
+    transition: background 0.2s;
+}
+
+.btn-act.btn-del {
+    background: #ffebee;
+    color: #c62828;
+    flex-shrink: 0;
+}
+
+.empty-state {
+    text-align: center;
+    padding: 30px 10px;
+    color: var(--text-muted);
+    font-size: 0.85rem;
+}
+
+.loading-state {
+    display: none;
+    text-align: center;
+    padding: 16px;
+    color: #ec407a;
+    font-weight: 600;
+}
+
+.spinner {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border: 3px solid #f8bbd0;
+    border-radius: 50%;
+    border-top-color: #ec407a;
+    animation: spin 0.8s linear infinite;
+    margin-bottom: 6px;
+}
+
+.page-card.hidden {
+    display: none !important;
+}
+
+/* === NOTIFIKASI POP-UP ATAS (TOP TOAST DIATAS) === */
+.toast-notification-top {
+    position: fixed;
+    top: -120px; /* Disembunyikan di atas layar */
+    left: 50%;
+    transform: translateX(-50%);
+    width: 90%;
+    max-width: 450px;
+    background: #ffffff;
+    border-left: 5px solid #ec407a;
+    border-radius: 14px;
+    padding: 14px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+    transition: top 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    z-index: 99999;
+}
+
+.toast-notification-top.show {
+    top: 20px; /* Muncul turun dari atas */
+}
+
+.toast-content {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.toast-icon {
+    font-size: 1.4rem;
+    color: #ec407a;
+}
+
+.toast-text strong {
+    display: block;
+    font-size: 0.85rem;
+    color: #333333;
+    margin-bottom: 2px;
+}
+
+.toast-text p {
+    font-size: 0.8rem;
+    color: #666666;
+    margin: 0;
+}
+
+.toast-close {
+    background: transparent;
+    border: none;
+    font-size: 1.3rem;
+    color: #aaa;
+    cursor: pointer;
+    padding: 0 4px;
+    line-height: 1;
+}
+
+.toast-close:hover {
+    color: #333;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }

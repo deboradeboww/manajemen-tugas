@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistem Manajemen Tugas Interaktif</title>
+    <!-- FontAwesome Ikon -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <!-- Supabase JS Library (DITAMBAHKAN DI SINI) -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <!-- Menghubungkan File CSS -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- NOTIFIKASI POP-UP DI ATAS (TOP TOAST) -->
+    <div id="toastNotification" class="toast-notification-top">
+        <div class="toast-content">
+            <i class="fa-solid fa-bell toast-icon"></i>
+            <div class="toast-text">
+                <strong>Sistem Manajemen Tugas</strong>
+                <p>Yey! Tugas barumu berhasil ditambahkan!</p>
+            </div>
+        </div>
+        <button class="toast-close" id="closeToastBtn">&times;</button>
+    </div>
+
+    <div class="main-wrapper">
+        <!-- HEADER & NAVIGASI BAR (STIKER DI ATAS) -->
+        <header class="app-header">
+            <div class="user-profile">
+                <div class="avatar">
+                    <i class="fa-solid fa-user"></i>
+                </div>
+                <div class="user-info">
+                    <h2>Hai Debo!</h2>
+                    <p>Kelola semua tugas perkuliahanmu disini!</p>
+                </div>
+            </div>
+
+            <!-- BAR NAVIGASI -->
+            <nav class="sidebar">
+                <ul class="nav-menu">
+                    <li class="nav-item active" id="navInput">
+                        <i class="fa-solid fa-pen-to-square"></i> Masukkan Tugas
+                    </li>
+                    <li class="nav-item" id="navList">
+                        <i class="fa-solid fa-list-check"></i> List Tugas
+                        <span class="nav-badge" id="taskCountBadge">0</span>
+                    </li>
+                </ul>
+            </nav>
+        </header>
+
+        <!-- AREA KONTEN UTAMA -->
+        <main class="main-content">
+
+            <!-- BAGIAN 1: FORM INPUT TUGAS -->
+            <section class="page-card" id="pageInput">
+                <h1>Enter di kolom manapun untuk menyimpan langsung</h1>
+                
+                <form id="taskForm">
+                    <div class="form-grid">
+                        
+                        <!-- Input Nama Tugas -->
+                        <div class="form-group full-width">
+                            <label for="taskTitle">Nama Tugas</label>
+                            <input type="text" id="taskTitle" placeholder="Masukkan nama tugas..." autocomplete="off">
+                            <div class="error-message" id="titleError">Nama tugas wajib diisi!</div>
+                        </div>
+
+                        <!-- Input Mata Kuliah -->
+                        <div class="form-group">
+                            <label for="taskCategory">Mata Kuliah</label>
+                            <select id="taskCategory">
+                                <option value="">-- Pilih Mata Kuliah --</option>
+                                <option value="Jaringan Komputer">Jaringan Komputer</option>
+                                <option value="Praktikum Jaringan Komputer">Praktikum Jaringan Komputer</option>
+                                <option value="Teknik Penyiaran">Teknik Penyiaran</option>
+                                <option value="Praktikum Teknik Penyiaran">Praktikum Teknik Penyiaran</option>
+                                <option value="Animasi 2D">Animasi 2D</option>
+                                <option value="Praktikum Animasi 2D">Praktikum Animasi 2D</option>
+                                <option value="Sistem Pemancar">Sistem Pemancar</option>
+                                <option value="Praktikum Sistem Pemancar">Praktikum Sistem Pemancar</option>
+                                <option value="Workshop UI/UX">Workshop UI/UX</option>
+                                <option value="Workshop Jurnalistik">Workshop Jurnalistik</option>
+                                <option value="Workshop Produksi Konten">Workshop Produksi Konten</option>
+                                <option value="Pemrograman Visual">Pemrograman Visual</option>
+                                <option value="Praktikum Pemrograman Visual">Praktikum Pemrograman Visual</option>
+                            </select>
+                            <div class="error-message" id="categoryError">Pilih mata kuliah terlebih dahulu!</div>
+                        </div>
+
+                        <!-- Input Deadline -->
+                        <div class="form-group">
+                            <label for="taskDeadline">Tenggat Waktu (Deadline)</label>
+                            <input type="date" id="taskDeadline">
+                            <div class="error-message" id="deadlineError">Pilih tenggat waktu!</div>
+                        </div>
+
+                        <!-- Input Prioritas -->
+                        <div class="form-group">
+                            <label for="taskPriority">Prioritas Tugas</label>
+                            <select id="taskPriority">
+                                <option value="Rendah">Rendah</option>
+                                <option value="Sedang" selected>Sedang</option>
+                                <option value="Tinggi">Tinggi</option>
+                            </select>
+                        </div>
+
+                        <!-- Input Status -->
+                        <div class="form-group">
+                            <label for="taskStatus">Status Awal</label>
+                            <select id="taskStatus">
+                                <option value="Belum Selesai" selected>Belum Selesai</option>
+                                <option value="Sedang Dikerjakan">Sedang Dikerjakan</option>
+                                <option value="Selesai">Selesai</option>
+                            </select>
+                        </div>
+
+                        <button type="submit" class="btn-submit">Simpan Tugas</button>
+                    </div>
+                </form>
+
+                <!-- Loading State saat menyimpan -->
+                <div class="loading-state" id="loadingState">
+                    <div class="spinner"></div>
+                    <div>Menyimpan tugas baru ke daftar...</div>
+                </div>
+            </section>
+
+            <!-- BAGIAN 2: DAFTAR / LIST TUGAS -->
+            <section class="page-card" id="pageList">
+                <h1>Daftar Tugas Saya</h1>
+
+                <!-- Filter Section -->
+                <div class="filter-section">
+                    <select id="filterCategory">
+                        <option value="Semua">Semua Mata Kuliah</option>
+                        <option value="Jaringan Komputer">Jaringan Komputer</option>
+                        <option value="Praktikum Jaringan Komputer">Praktikum Jaringan Komputer</option>
+                        <option value="Teknik Penyiaran">Teknik Penyiaran</option>
+                        <option value="Praktikum Teknik Penyiaran">Praktikum Teknik Penyiaran</option>
+                        <option value="Animasi 2D">Animasi 2D</option>
+                        <option value="Praktikum Animasi 2D">Praktikum Animasi 2D</option>
+                        <option value="Sistem Pemancar">Sistem Pemancar</option>
+                        <option value="Praktikum Sistem Pemancar">Praktikum Sistem Pemancar</option>
+                        <option value="Workshop UI/UX">Workshop UI/UX</option>
+                        <option value="Workshop Jurnalistik">Workshop Jurnalistik</option>
+                        <option value="Workshop Produksi Konten">Workshop Produksi Konten</option>
+                        <option value="Pemrograman Visual">Pemrograman Visual</option>
+                        <option value="Praktikum Pemrograman Visual">Praktikum Pemrograman Visual</option>
+                    </select>
+
+                    <select id="filterStatus">
+                        <option value="Semua">Semua Status</option>
+                        <option value="Belum Selesai">Belum Selesai</option>
+                        <option value="Sedang Dikerjakan">Sedang Dikerjakan</option>
+                        <option value="Selesai">Selesai</option>
+                    </select>
+                </div>
+
+                <!-- Daftar Tugas Container -->
+                <div class="task-container" id="taskList">
+                    <div class="empty-state" id="emptyState">
+                        <div>Belum ada tugas tersimpan. Silakan isi lewat menu "Masukkan Tugas"!</div>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <!-- Menghubungkan File JavaScript -->
+    <script src="script.js"></script>
+</body>
+</html>
